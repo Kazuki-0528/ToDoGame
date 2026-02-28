@@ -47,7 +47,8 @@ export default {
           this.$router.replace("/login");
         }
       }
-    },
+    }
+  },
   components: {
     AddTodo,
     TodoList,
