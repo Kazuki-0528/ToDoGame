@@ -1,7 +1,8 @@
 const state = {
   currentUser: {
     user: {
-      experience_point: 0
+      experience_point: 0,
+      status: "初心者"
     },
     todo: {
       point: "",

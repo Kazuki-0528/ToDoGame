@@ -4,6 +4,7 @@ class V1::UsersController < ApplicationController
 
     user = User.find_by(uid: params[:uid])
     return render json: { error: "user not found" }, status: :not_found unless user
+    end
 
     todos = user.todos.order(sort: "ASC")
     render json: { user: user, todos: todos }

@@ -3,7 +3,10 @@
     <Status />
     <v-row justify="center">
       <v-col class="pb-0" cols="12" xs="12" sm="12" md="12" lg="8">
-        <div>
+        <div class="parent">
+          <img class="child" src="../assets/mon_285.gif" />
+          <p class="child">コインを使って報酬をもらおう</p>
+          <img class="child" src="../assets/mon_274.gif" @load="show=true" :class="{hide: !show}" />
           <AddReward @submit="addReward" />
         </div>
       </v-col>
@@ -11,7 +14,7 @@
     <v-row justify="center">
       <v-col cols="12" xs="12" sm="12" md="12" lg="8">
         <div>
-          <RewardList :rewards="currentUser.rewards" />
+          <RewardList :rewards="currentUser.rewards"/>
         </div>
       </v-col>
     </v-row>
@@ -106,6 +109,11 @@ $sp: 480px;
   }
 }
 
+@font-face {
+  font-family: dot;
+  src: url("../assets/fonts/k8x12S.ttf") format("truetype");
+}
+
 .user-page {
   .user-status {
     @include pc {
@@ -116,6 +124,25 @@ $sp: 480px;
     }
     @include sp {
       width: 100% !important;
+    }
+  }
+  .parent {
+    text-align: center;
+    .child {
+      opacity: 1;
+      transition: opacity 1s;
+      display: inline-block;
+      font-family: dot;
+      letter-spacing: 10px;
+      font-size: 30px;
+      color: $main-color;
+      vertical-align: middle;
+      p {
+        font-weight: bold;
+      }
+    }
+    .child.hide {
+      opacity: 0;
     }
   }
 }

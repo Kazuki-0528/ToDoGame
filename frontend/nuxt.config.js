@@ -94,5 +94,9 @@ export default {
   ** See https://nuxtjs.org/api/configuration-build/
   */
   build: {
+    extend (config) {
+      config.performance = config.performance || {}
+      config.performance.maxEntrypointSize = 700 * 1024
+    }
   }
 }

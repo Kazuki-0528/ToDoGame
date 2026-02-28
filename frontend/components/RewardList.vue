@@ -13,13 +13,9 @@
         element="ul"
       >
         <li class="reward-list" v-for="reward in rewards" :key="reward.sort">
-          <v-icon size="30px"
-            >mdi-numeric-{{ reward.point }}-circle-outline</v-icon
-          >
           <v-hover v-slot:default="{ hover }">
             <v-icon
-              v-if="!reward.status"
-              @click="completeDialog = true"
+              @click="openCompleteDialog(reward)"
               size="25px"
               color="red"
               v-text="hover ? 'mdi-heart-multiple' : 'mdi-heart-outline'"
@@ -30,61 +26,29 @@
           <v-dialog v-model="completeDialog">
             <v-card>
               <v-card-title
-                >『{{ reward.title }}』を達成しましたか？</v-card-title
+                >『{{ selectedItem.title }}』をコインで購入しますか？</v-card-title
               >
-              <v-btn @click="completeItem(reward)">はい</v-btn>
+              <v-btn @click="completeItem(selectedItem)">はい</v-btn>
               <v-btn @click="completeDialog = false">いいえ</v-btn>
             </v-card>
           </v-dialog>
 
           <span class="reward-title">{{ reward.title }}</span>
-          <div class="reward-list-icon">
-            <v-icon v-if="reward.status" color="yellow">lock_open</v-icon>
-            <v-icon v-else color="yellow">lock</v-icon>
-            <v-icon @click="editItem(reward)" color="white" big
-              >mdi-pencil</v-icon
-            >
-            <v-icon @click="deleteDialog = true" color="white">delete</v-icon>
-          </div>
+          <span class="reward-list-icon">{{ reward.point }}コイン</span>
+          <v-icon v-if="reward.status" big color="yellow">check</v-icon>
+          <v-icon v-else big color="yellow">monetization_on</v-icon>
+          <v-icon @click="openDeleteDialog(reward)">delete</v-icon>
 
           <v-dialog v-model="deleteDialog">
             <v-card>
-              <v-card-title>削除しますか？</v-card-title>
-              <v-btn @click="deleteItem(reward)">はい</v-btn>
+              <v-card-title>『{{selectedItem.title}}』を削除しますか？</v-card-title>
+              <v-btn @click="deleteItem(selectedItem)">はい</v-btn>
               <v-btn @click="deleteDialog = false">いいえ</v-btn>
             </v-card>
           </v-dialog>
         </li>
       </draggable>
     </v-card>
-
-    <v-dialog class="edit-dialog" v-model="dialog">
-      <v-card>
-        <v-card-title>
-          <h2 class="list-title">ToDo編集</h2>
-        </v-card-title>
-        <p>やること</p>
-        <v-text-field
-          class="dialog-title"
-          v-model="dialogText.title"
-          filled
-        ></v-text-field>
-        <p>ポイント</p>
-        <v-select
-          class="dialog-point"
-          single-line
-          :items="items"
-          v-model="dialogText.point"
-          :value="dialogText.point"
-          filled
-        ></v-select>
-        <v-btn
-          class="update-btn"
-          @click="updateItem(dialogText.id, dialogText.title, dialogText.point)"
-          >保存</v-btn
-        >
-      </v-card>
-    </v-dialog>
 
     <v-snackbar v-model="snack" :timeout="3000" :color="snackColor">
       {{ snackText }}
@@ -94,26 +58,20 @@
 </template>
 
 <script>
-const maxNumber = 11;
-const numberRange = [...Array(maxNumber).keys()];
-
 import axios from "@/plugins/axios";
-
 export default {
   props: ["rewards"],
   data() {
     return {
       singleSelect: true,
       selected: [],
-      items: numberRange,
-      editOn: true,
       snack: false,
       snackColor: "",
       snackText: "",
-      dialogText: "",
-      dialog: false,
       completeDialog: false,
-      deleteDialog: false
+      selectedItem: "",
+      deleteDialog: false,
+      dialog: false,
     };
   },
   computed: {
@@ -132,25 +90,24 @@ export default {
         return reward.id !== item.id;
       });
       const updateUser = {
-        // ...this.user,
         user: getUser.data.user,
         rewards
       };
       this.$store.commit("setUser", updateUser);
+      item.status = true;
       this.snack = true;
       this.snackColor = "black";
-      this.snackText = item.point + "コインを消費した";
+      this.snackText = item.point + "コインを使った";
       this.completeDialog = false;
     },
     async deleteItem(item) {
-      await axios.delete(`/v1/rewards/${item.id}`); //.then(() => {
-      //this.$router.push("/login");
-      //}); //これで飛ばせる
+      const getUser = await axios.delete(`/v1/rewards/${item.id}`); 
       const rewards = this.user.rewards.filter(reward => {
         return reward.id !== item.id;
       });
       const updateUser = {
         ...this.user,
+        user: getUser.data.user,
         rewards
       };
       this.$store.commit("setUser", updateUser);
@@ -158,19 +115,6 @@ export default {
       this.snackColor = "black";
       this.snackText = "削除しました";
       this.deleteDialog = false;
-    },
-    async editItem(reward) {
-      this.dialog = true;
-      this.dialogText = reward;
-    },
-    async updateItem(id, title, point) {
-      await axios.patch(`/v1/rewards/${id}`, {
-        reward: {
-          title: title,
-          point: point
-        }
-      });
-      this.dialog = false;
     },
     async atEnd() {
       let result = await axios.patch(`v1/rewards`, {
@@ -181,28 +125,23 @@ export default {
         rewards: this.rewards
       };
       this.$store.commit("setUser", updateUser);
+    },
+    openCompleteDialog(reward) {
+      this.completeDialog = true;
+      this.selectedItem = reward;
+    },
+    openDeleteDialog(reward) {
+      this.deleteDialog = true
+      this.selectedItem = reward;
     }
   }
 };
 </script>
 
 <style lang="scss">
-$main-color: #03a9f5 !important;
-$sub-color: rgb(11, 214, 236) !important;
-$accent-color: red;
-
-@mixin btn {
-  background-color: rgb(29, 29, 29) !important;
-  border: 2px solid $main-color;
-  color: $main-color !important;
-  display: inline-block;
-  margin: 0px 5% 15px;
-  width: 70%;
-  font-weight: bold;
-}
-
-.list-title {
-  color: rgb(6, 6, 201);
+@font-face {
+  font-family: dot;
+  src: url("../assets/fonts/k8x12S.ttf") format("truetype");
 }
 
 .v-icon {
@@ -213,35 +152,27 @@ $accent-color: red;
 .reward-list {
   display: flex;
   list-style: none;
-  border-left: solid 8px $sub-color !important;
-  border-bottom: solid 2px gray !important;
-  border-left: solid 8px yellow !important;
-  color: black;
+  border: solid 3px red !important;
+  border-left: solid 8px deeppink !important;
   margin: 10px;
   padding: 10px;
   border: 1px solid #7f7f7f;
   border-radius: 5px;
-  background-color: rgb(43, 128, 240);
+  background-color: rgb(73, 4, 25);
   cursor: grab;
   .reward-list-icon {
     margin-left: auto;
-  }
-  .reward-list-btn {
-    background-color: white !important;
+    padding-top: 3px;
+    font-weight: bold;
   }
   .reward-title {
-    padding-top: 2px;
     margin-left: 10px;
     max-width: 45%;
-  }
-  .reward-point {
-    color: rgb(236, 11, 97);
+    color: white;
+    font-family: dot;
+    letter-spacing: 8px;
     font-weight: bold;
-    display: inline-block;
-    width: 25px;
-    border-radius: center;
-    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.08);
-    border-bottom: solid 2px yellow;
+    font-size: 18px;
   }
 }
 
@@ -258,16 +189,5 @@ $accent-color: red;
     width: 40%;
     margin-left: 5%;
   }
-  .update-btn {
-    @include btn;
-  }
-}
-
-h2 {
-  color: $main-color;
-}
-p {
-  font-size: 20px;
-  font-weight: bold;
 }
 </style>

@@ -1,21 +1,18 @@
 <template>
   <v-container class="login-page">
-    <h1 v-if="countHiddenPage >= 5">あなたのために祈ってます。</h1>
     <h1 class="login-title">ToDo<span class="login-title-first">Game</span></h1>
     <v-row>
-      <div v-if="user"></div>
-      <v-col v-else cols="12" sm="12" md="6" lg="6">
-        <!-- 根拠のある言葉にしていく -->
+      <v-col cols="12" sm="12" md="6" lg="6">
         <h1 class="login-subtitle text-center">ToDoGameとは？</h1>
         <vue-typer
           class="login-explain"
           style="font-family: dot;"
           :text="[
-            'ゲーム感覚で日々のやることをこなす',
-            'ToDoアプリです。',
-            'きみはもっと。もっと。カシコクナル',
-            'さあ、、、イマすぐに、、、はじめよう。',
-            'いくんだ。ユウシャよ、、、。'
+            'ゲーミフィケーション　＋　やること',
+            '効率的なToDoアプリです。',
+            'ゲーム感覚で',
+            '日々のやるべきことを',
+            '終わらせよう！！！'
           ]"
           erase-style="clear"
           :type-delay="200"
@@ -23,10 +20,6 @@
           :repeat="Infinity"
           caret-animation="expand"
         ></vue-typer>
-        <!-- <h2 class="login-explain">
-          <span>ゲーム感覚</span>で日々のやることをこなす<br />
-          ToDoアプリです。
-        </h2> -->
         <div class="monster">
           <img class="mon" src="../assets/mon_178.gif" />
           <img class="mon" src="../assets/mon_176.gif" />
@@ -35,53 +28,14 @@
         </div>
         <div class="guest">
           <a class="btn cubic"
-            ><span class="hovering">ここからはじまる</span
-            ><span class="default">冒険が</span></a
+            ><v-btn @click="guestLogin" class="hovering">ログインする</v-btn
+            ><v-btn class="default">ゲストで</v-btn></a
           >
-        </div>
-        <!-- <div v-if="user"></div>
-        <div class="guest" v-else>
-          <v-hover v-slot:default="{ hover }">
-            <v-btn class="login-button" @click="guestLogin">
-              <v-icon v-text="hover ? 'mdi-feather' : ''"></v-icon
-              >ゲストログイン
-            </v-btn>
-          </v-hover>
-        </div> -->
-      </v-col>
-
-      <v-col v-if="user" class="extra-explain" cols="12" sm="12" md="12" lg="12">
-        <img class="girl" src="../assets/mon_214.gif" />
-        <v-icon
-          id="call"
-          :color="color"
-          @click="countCall()"
-          class="mb-5 call"
-          :size="size"
-          >mdi-christianity-outline</v-icon
-        >
-        <h1 v-if="countHiddenPage >= 10">どうか、すすんでください。</h1>
-        <div class="instead-of-form">
-          <vue-typer
-            style="font-family: dot;"
-            :text="[
-              'ゆうしゃさま。 さいごまで　よんで　くださいますのね？',
-              'ああ！わたしのことばを　きいてくださるかたが　いらっしゃるなんて！',
-              'じゅうじかをおして　わたしのことばを',
-              'きいてください、、、。',
-            ]"
-            erase-style="clear"
-            :type-delay="140"
-            :erase-delay="270"
-            :repeat="Infinity"
-            caret-animation="expand"
-          ></vue-typer>
         </div>
       </v-col>
 
       <v-col
         class="login-button-wrapper"
-        v-else
         cols="12"
         sm="12"
         md="6"
@@ -91,7 +45,6 @@
           <h1 id="login-signup" class="login-form-title text-center">
             新規登録<span>は</span>こちら
           </h1>
-          <!-- 文字を傾けたい -->
           <v-text-field
             v-model="name"
             :counter="10"
@@ -137,32 +90,20 @@
       </v-col>
     </v-row>
 
-    <!-- <vue-typer
-      style="font-family: dot;"
-      :text="[
-        'ここからハジマル。　ながいたび。',
-        'きみはもっと。もっと。カシコクナル',
-        'さあ、、、イマすぐに、、、はじめよう。',
-        'いくんだ。ユウシャよ、、、'
-      ]"
-      erase-style="clear"
-      :type-delay="230"
-      :erase-delay="300"
-      :repeat="Infinity"
-      caret-animation="expand"
-    ></vue-typer> -->
-    <div v-if="user"></div>
-    <v-row v-else class="introduction" style="font-family: dot;">
+    <v-row class="introduction" style="font-family: dot;">
       <v-col class="sub-introduction main" cols="12" sm="12" md="12" lg="12">
-        <h3 class="login-explain">人間は成長してこそ楽しさを感じる</h3>
-        <h3 class="login-explain">さらなる高みを目指して</h3>
+        <h3 class="login-explain">報酬が脳を活性化する</h3>
+        <h3 class="login-explain">さらなる報酬を目指して</h3>
         <h3 class="login-explain">やるべきことをゲーム化して終わらせよう！</h3>
-        <h3 class="login-explain">毎日継続</h3>
+        <h3 class="login-explain">頑張ったあとに報酬を、、、。</h3>
       </v-col>
     </v-row>
 
-    <div v-if="user"></div>
-    <v-row v-else class="introduction md-0 justify-center">
+    <div class="wrapper" style="font-family: dot;">
+      <a href="#" class="button">成長したい!</a>
+    </div>
+
+    <v-row class="introduction md-0 justify-center">
       <v-col
         class="sub-introduction-1"
         mx-2
@@ -174,7 +115,7 @@
       >
         <img src="../assets/mon_235.gif" />
         <h3 class="login-subtitle-1">
-          冒険のように楽しめる<img class="item1" src="../assets/icon003.png" />
+          冒険のように楽しめる
         </h3>
         <h3 class="login-explain-1">
           いつだって僕ら
@@ -192,7 +133,7 @@
       >
         <img src="../assets/mon_260.gif" />
         <h3 class="login-subtitle-2">
-          レベル上げを楽しもう<img class="item2" src="../assets/icon025.png" />
+          レベル上げを楽しもう
         </h3>
         <h3 class="login-explain-2">
           きっと誰だって
@@ -210,7 +151,7 @@
       >
         <img src="../assets/mon_270.gif" />
         <h3 class="login-subtitle-3 text-center">
-          それが成長へのコツ<img class="item3" src="../assets/icon024.png" />
+          それが成長へのコツ
         </h3>
         <h3 class="login-explain-3">
           楽しみたいはず。
@@ -218,35 +159,15 @@
       </v-col>
     </v-row>
 
-    <!-- <v-row>
-      <v-col cols="12" sm="12" md="12" lg="10">
-        <v-carousel height="100%">
-          <v-carousel-item
-            v-for="(item, i) in items"
-            :key="i"
-            :src="item.src"
-          ></v-carousel-item>
-        </v-carousel>
-      </v-col>
-    </v-row> -->
-
-    <v-hover v-slot:default="{ hover }">
-      <div v-if="user"></div>
-      <v-btn v-else class="bottom-btn" @click.stop="dialog = true">
-        <v-icon v-text="hover ? 'mdi-chess-queen' : ''"></v-icon>
+    <div class="bottom">
+      <v-btn class="bottom-btn" @click.stop="dialog = true">
         ログイン
       </v-btn>
-    </v-hover>
-    <v-hover v-slot:default="{ hover }">
-      <div v-if="user"></div>
-      <v-btn v-else class="bottom-btn" @click="moveToTop">
-        <v-icon v-text="hover ? 'mdi-chess-knight' : ''"></v-icon>
+      <v-btn class="bottom-btn" @click="moveToTop">
         新規登録
       </v-btn>
-    </v-hover>
-    <!-- <v-btn color="primary" dark @click.stop="dialog = true">
-      open dialog
-    </v-btn> -->
+    </div>
+
     <v-dialog content-class="dialog" v-model="dialog" max-width="60%">
       <v-card>
         <v-card-title class="headline"><h3>ログイン</h3></v-card-title>
@@ -279,26 +200,6 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <!-- <form>
-      <v-text-field
-        v-model="email"
-        :counter="20"
-        label="email"
-        data-vv-name="email"
-        required
-      ></v-text-field>
-      <v-text-field
-        v-model="password"
-        label="password"
-        data-vv-name="password"
-        required
-        :type="show1 ? 'text' : 'password'"
-        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-        @click:append="show1 = !show1"
-      ></v-text-field>
-      <v-btn class="mr-4" @click="login">submit</v-btn>
-      <p v-if="error" class="errors">{{ error }}</p>
-    </form> -->
   </v-container>
 </template>
 
@@ -323,9 +224,6 @@ export default {
       show1: false,
       show2: false,
       dialog: false,
-      countHiddenPage: 0,
-      color: "",
-      size: 65,
       showContent: false,
       error: ""
     };
@@ -500,11 +398,6 @@ export default {
       };
       setTimeout(check, 1000, "checked");
     },
-    countCall() {
-      this.countHiddenPage++;
-      this.size += 10;
-      this.color = "blue";
-    }
   }
 };
 </script>
@@ -548,15 +441,6 @@ $sp: 480px;
 }
 
 .login-page {
-  .extra-explain {
-    text-align: center;
-    flex-direction: column;
-    .girl {
-    height: 60%;
-    margin-top: 40px;
-    }
-  }
-
   .mon {
     width: 20%;
 
@@ -580,7 +464,7 @@ $sp: 480px;
     cursor: pointer;
 
     &.cubic {
-      & span {
+      & .v-btn {
         position: absolute;
         top: 0;
         left: 0;
@@ -694,13 +578,6 @@ $sp: 480px;
     text-align: center;
     margin-top: 30px;
   }
-  .mdi-chess-queen {
-    color: $main-color !important;
-  }
-
-  .mdi-chess-knight {
-    color: $main-color !important;
-  }
 
   .login-button {
     &:hover {
@@ -709,7 +586,7 @@ $sp: 480px;
     }
   }
   .checked {
-    color: $accent-color;
+    color: $accent-color !important;
   }
   .login-button-wrapper {
     text-align: center;
@@ -735,7 +612,6 @@ $sp: 480px;
   }
 }
 
-
 .dialog-btn {
   background-color: black;
   border: 2px solid $main-color;
@@ -744,7 +620,7 @@ $sp: 480px;
   margin: 15px;
   width: 45%;
   font-weight: bold;
-  
+
   &:hover {
     border: 2px solid $main-color;
     color: $sub-color;
@@ -769,6 +645,63 @@ $sp: 480px;
     }
   }
 }
+
+$color: #2194e0;
+
+@keyframes sheen {
+  0% {
+    transform: skewY(-45deg) translateX(0);
+  }
+  100% {
+    transform: skewY(-45deg) translateX(12.5em);
+  }
+}
+
+// 成長したいボタン
+
+.wrapper {
+  display: flex;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  left: 50%;
+}
+.button {
+  padding: 0.75em 2em;
+  text-align: center;
+  text-decoration: none;
+  color: $color;
+  border: 2px solid $color;
+  font-size: 24px;
+  display: inline-block;
+  border-radius: 0.3em;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  &:before {
+    content: "";
+    background-color: rgba(255, 255, 255, 0.5);
+    height: 100%;
+    width: 3em;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: -4.5em;
+    transform: skewX(-45deg) translateX(0);
+    transition: none;
+  }
+  &:hover {
+    background-color: $color;
+    letter-spacing: 10px;
+    color: #fff;
+    border-bottom: 4px solid darken($color, 10%);
+    &:before {
+      transform: skewX(-45deg) translateX(13.5em);
+      transition: all 0.5s ease-in-out;
+    }
+  }
+}
+
+// ここまで
 
 .vue-typer {
   font-size: 20px;
@@ -798,11 +731,6 @@ $sp: 480px;
   text-align: center;
   justify-content: center;
   position: relative;
-  .item1 {
-    position: absolute;
-    padding-left: 210px;
-    padding-top: 3px;
-  }
 }
 
 .login-explain-1 {
@@ -821,11 +749,6 @@ $sp: 480px;
   text-align: center;
   justify-content: center;
   position: relative;
-  .item2 {
-    position: absolute;
-    padding-left: 210px;
-    padding-top: 3px;
-  }
 }
 
 .login-explain-2 {
@@ -844,11 +767,6 @@ $sp: 480px;
   text-align: center;
   justify-content: center;
   position: relative;
-  .item3 {
-    position: absolute;
-    padding-left: 190px;
-    padding-top: 3px;
-  }
 }
 .login-explain-3 {
   font-family: dot;
@@ -884,6 +802,18 @@ $sp: 480px;
     text-align: center;
     background-color: rgb(11, 214, 236);
     border: 3px solid skyblue;
+  }
+}
+
+.bottom {
+  text-align: center;
+  .bottom-btn {
+    border: 2px solid $main-color;
+    color: $sub-color;
+    &:hover {
+      border: 2px solid #06d6a0 !important;
+      color: greenyellow !important;
+    }
   }
 }
 </style>

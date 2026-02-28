@@ -10,7 +10,6 @@
             outlined
           ></v-select>
         </v-col>
-        <!-- v-bind: 属性名 = "設定する値" -->
         <v-col class="pr-0" cols="9" xs="8" sm="8" md="8" lg="8">
           <v-text-field
             v-model="title"

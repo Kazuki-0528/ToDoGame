@@ -33,7 +33,7 @@ class V1::RewardsController < ApplicationController
     reward = Reward.find(params[:id])
     user = User.find(reward.user_id)
     if user.point <= reward.point
-      render json: {error_msg: ["TP(タスクポイント)が足りません"]}, status: :unprocessable_entity
+      render json: {error_msg: ["コインが足りません"]}, status: :unprocessable_entity
     else
       user = User.find(reward.user_id)
       losepoint = user.point.to_i

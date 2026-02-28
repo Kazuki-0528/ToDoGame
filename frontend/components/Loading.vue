@@ -23,7 +23,7 @@ export default {
 </script>
 
 <style  lang="scss" scoped>
-$theme-color: #25b290;
+$theme-color: #1654be;
 .loader-container {
   position: fixed;
   top: 0;
@@ -36,7 +36,6 @@ $theme-color: #25b290;
 
 .ball-clip-rotate > div {
   border: 2px solid $theme-color;
-  /* background-color: orange !important; */
   border-bottom-color: transparent !important;
 }
 

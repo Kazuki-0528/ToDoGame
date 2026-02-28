@@ -10,6 +10,7 @@
       :mini-variant="miniVariant"
       :clipped="clipped"
       fixed
+      src="https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg"
       app
     >
       <v-list>
@@ -30,7 +31,7 @@
 
         <v-list-item v-if="currentUser" @click="logOutWindow = true">
           <v-list-item-action>
-            <v-icon>mdi-key</v-icon>
+            <v-icon>mdi-brightness-3</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>ログアウト</v-list-item-title>
@@ -38,8 +39,8 @@
           <v-dialog v-model="logOutWindow">
             <v-card>
               <v-card-title class="headline grey lighten-2" color="red">ログアウトしますか？</v-card-title>
-              <v-btn color="orange" @click="logOut">はい</v-btn>
-              <v-btn color="orange" @click="logOutWindow = false">いいえ</v-btn>
+              <v-btn color="blue" @click="logOut">はい</v-btn>
+              <v-btn color="blue" @click="logOutWindow = false">いいえ</v-btn>
             </v-card>
           </v-dialog>
         </v-list-item>
@@ -48,30 +49,40 @@
     <v-app-bar class="tool-bar" :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title class="pl-0">
-        <router-link to="/user" class="toolbar-title"
+        <router-link v-if="currentUser" to="/user" class="toolbar-title"
+          ><img class="sword" src="../assets/icon002.png" />ToDo<span class="title-first">Game</span></router-link
+        >
+        <router-link v-else to="/login" class="toolbar-title"
           ><img class="sword" src="../assets/icon002.png" />ToDo<span class="title-first">Game</span></router-link
         >
       </v-toolbar-title>
 
       <v-toolbar-items class="page-link" v-if="currentUser">
-        <v-btn class="header-btn ml-1" @click="logOutWindow = true">
+        <v-btn to="/user" class="header-btn ml-1">
           <v-hover v-slot:default="{ hover }">
-            <v-icon size="25px" color="blue" v-text="hover ? 'mdi-key-remove' : 'mdi-key-star'">
+            <v-icon size="25px" color="blue" v-text="hover ? 'mdi-book-open-page-variant' : 'mdi-book-open-variant'">
             </v-icon>
           </v-hover>
         </v-btn>
       </v-toolbar-items>
 
-      <!-- <Vdialog></Vdialog> -->
-
-      <!-- <v-toolbar-items class="page-link" v-if="user">
-        <v-btn class="header-btn ml-1" @click="logOutWindow = true">
+      <v-toolbar-items class="page-link" v-if="currentUser">
+        <v-btn to="/reward" nuxt class="header-btn ml-2">
           <v-hover v-slot:default="{ hover }">
-            <v-icon size="20px" color="orange" v-text="hover ? 'mdi-coffee-to-go' : 'mdi-coffee'">
+            <v-icon size="25px" color="red" v-text="hover ? 'mdi-gift' : 'mdi-gift-outline'">
             </v-icon>
           </v-hover>
         </v-btn>
-      </v-toolbar-items> -->
+      </v-toolbar-items>
+
+      <v-toolbar-items class="page-link" v-if="currentUser">
+        <v-btn to="/" nuxt class="header-btn ml-2">
+          <v-hover v-slot:default="{ hover }">
+            <v-icon size="25px" color="yellow" v-text="hover ? 'mdi-help-circle' : 'mdi-help-circle-outline'">
+            </v-icon>
+          </v-hover>
+        </v-btn>
+      </v-toolbar-items>
 
       <v-spacer />
     </v-app-bar>
@@ -89,7 +100,6 @@
 <script>
 import Loading from "@/components/Loading";
 import Success from "@/components/Success";
-// import Vdialog from "@/components/Vuetify/Vdialog";
 import firebase from "@/plugins/firebase";
 import axios from "@/plugins/axios";
 
@@ -110,7 +120,6 @@ export default {
   components: {
     Loading,
     Success,
-    // Vdialog,
   },
   computed: {
     currentUser() {
@@ -120,30 +129,30 @@ export default {
       if (this.currentUser) {
         return [
           {
-            icon: "mdi-crown",
-            title: "へるぷ",
-            to: "/"
-          },
-          {
-            icon: "mdi-star",
-            title: "mypage",
+            icon: "mdi-book-open-page-variant",
+            title: "やること",
             to: "/user"
           },
           {
-            icon: "mdi-lock",
-            title: "Reward",
+            icon: "mdi-gift",
+            title: "報酬",
             to: "/reward"
+          },
+          {
+            icon: "mdi-help-circle",
+            title: "ヘルプ",
+            to: "/"
           }
         ];
       } else {
         return [
           {
-            icon: "mdi-chess-king",
+            icon: "mdi-cat",
             title: "ログイン",
-            to: "/login"
+            to: "/login",
           },
           {
-            icon: "mdi-chess-queen",
+            icon: "mdi-hand-heart-outline",
             title: "おまけ",
             to: "/signup"
           }
@@ -255,5 +264,10 @@ $sp: 480px;
     padding-left: 6px;
   }
 
+  .v-list-item__title {
+    font-family: dot;
+    font-size: 20px;
+    letter-spacing: 5px;
+  }
 }
 </style>

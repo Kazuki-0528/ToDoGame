@@ -2,28 +2,25 @@
   <v-container class="user-page" v-if="currentUser">
     <v-row class="user-status">
       <v-col cols="12" xs="5" sm="6" md="5" lg="5">
-        <p>
-          名前：{{ currentUser.user.name
-          }}<v-icon
-            class="mb-3"
-            color="yellow"
-            size="30"
-            v-if="(currentUser.user.level = 10)"
-            >mdi-crown</v-icon
-          >
-        </p>
+        <p>名前：{{ currentUser.user.name }}</p>
 
         <div class="user-point">
-          <img class="coin-img" src="../assets/icon021.png" />
+          <v-icon big color="yellow">monetization_on</v-icon>
           <p class="user-task-point">{{ currentUser.user.point }}コイン</p>
         </div>
       </v-col>
 
-      <v-col cols="12" xs="5" sm="6" md="5" lg="5">
-        <p class="user-level">レベル:{{ currentUser.user.level }}</p>
-        <p v-if="currentUser.user.level == 10">
-          あなたは最大レベルになりました
-        </p>
+      <v-col cols="12" xs="6" sm="6" md="6" lg="6">
+        <p class="user-level">ステータス:{{ currentUser.user.status }}</p>
+        <p>残りの体力</p>
+        <v-rating
+          v-model="rating"
+          color="red darken-3"
+          background-color="grey darken-1"
+          :empty-icon="emptyIcon"
+          :full-icon="fullIcon"
+          hover
+        ></v-rating>
       </v-col>
     </v-row>
   </v-container>
@@ -36,7 +33,10 @@ export default {
       show1: false,
       show2: false,
       error: "",
-      showContent: false
+      showContent: false,
+      rating: 0,
+      emptyIcon: 'mdi-heart-outline',
+      fullIcon: 'mdi-heart',
     };
   },
   fetch({ store, redirect }) {
@@ -69,18 +69,19 @@ $sub-color: rgb(11, 214, 236) !important;
   background-color: $main-color;
 }
 
-.coin-img {
-  width: 10%;
-  height: 10%;
-  display: inline-block;
-}
-
 .user-point {
   display: flex;
+  .v-icon {
+    width: 10%;
+    height: 10%;
+    padding-top: 5px;
+    display: inline-block;
+  }
   .user-task-point {
+    display: inline-block;
     font-size: x-large;
     color: blue;
-    padding-left: 5%;
+    padding-left: 3%;
   }
 }
 
