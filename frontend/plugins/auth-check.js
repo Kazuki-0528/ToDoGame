@@ -3,21 +3,58 @@ import axios from "@/plugins/axios"
 
 const authCheck = ({ store }) => {
   firebase.auth().onAuthStateChanged(async user => {
-    if (user) {
-      try {
-        const { data } = await axios.get(`/v1/users?uid=${user.uid}`)
-        if (data && data.user) {
-          store.commit("setUser", data)
+    if (!user) {
+      store.commit("setUser", null)
+      return
+    }
+
+    try {
+      const { data } = await axios.get(`/v1/users?uid=${user.uid}`)
+      if (data && data.user) {
+        store.commit("setUser", data)
+      }
+      return
+    } catch (error) {
+      if (!error.response || error.response.status !== 404) {
+        console.log(error)
+        const currentUser = store.state.currentUser
+        if (currentUser && currentUser.user) {
           return
         }
-      } catch (error) {
-        if (!error.response || error.response.status !== 404) {
-          console.log(error)
-        }
+
+        store.commit("setUser", {
+          user: {
+            email: user.email,
+            name: user.displayName || "ゲスト",
+            uid: user.uid
+          },
+          todos: [],
+          rewards: []
+        })
+        return
       }
     }
 
-    store.commit("setUser", null)
+    try {
+      const { data: createdUser } = await axios.post("/v1/users", {
+        user: {
+          email: user.email,
+          uid: user.uid,
+          name: user.displayName || "ゲスト"
+        }
+      })
+      store.commit("setUser", {
+        user: createdUser,
+        todos: [],
+        rewards: []
+      })
+    } catch (error) {
+      console.log(error)
+      const currentUser = store.state.currentUser
+      if (!currentUser || !currentUser.user) {
+        store.commit("setUser", null)
+      }
+    }
   })
 }
 

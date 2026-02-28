@@ -39,16 +39,6 @@ export default {
       fullIcon: 'mdi-heart',
     };
   },
-  fetch({ store, redirect }) {
-    store.watch(
-      state => state.currentUser,
-      (newUser, oldUser) => {
-        if (!newUser) {
-          return redirect("/login");
-        }
-      }
-    );
-  },
   computed: {
     currentUser() {
       return this.$store.state.currentUser;
