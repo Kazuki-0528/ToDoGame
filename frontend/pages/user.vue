@@ -23,7 +23,6 @@ import AddTodo from "@/components/AddTodo";
 import TodoList from "@/components/TodoList";
 import Status from "@/components/Status";
 import axios from "@/plugins/axios";
-import firebase from "@/plugins/firebase";
 
 export default {
   data() {
@@ -40,22 +39,15 @@ export default {
       unwatchCurrentUser: null
     };
   },
-  created() {
-    this.unwatchCurrentUser = this.$store.watch(
-      state => state.currentUser,
-      newUser => {
+  watch: {
+    currentUser: {
+      immediate: true,
+      handler(newUser) {
         if (!newUser) {
           this.$router.replace("/login");
         }
-      },
-      { immediate: true }
-    );
-  },
-  beforeDestroy() {
-    if (this.unwatchCurrentUser) {
-      this.unwatchCurrentUser();
-    }
-  },
+      }
+    },
   components: {
     AddTodo,
     TodoList,
