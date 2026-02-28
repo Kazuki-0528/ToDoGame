@@ -35,7 +35,8 @@ export default {
       show1: false,
       show2: false,
       error: "",
-      showContent: false
+      showContent: false,
+      unwatchCurrentUser: null
     };
   },
   watch: {
