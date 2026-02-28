@@ -295,11 +295,37 @@ export default {
           })(error.code);
         });
     },
+    async ensureUserDocument(firebaseUser, defaultName = "") {
+      try {
+        const { data } = await axios.get(`/v1/users?uid=${firebaseUser.uid}`);
+        if (data && data.user) {
+          this.$store.commit("setUser", data);
+          return;
+        }
+      } catch (e) {
+        if (!e.response || e.response.status !== 404) {
+          throw e;
+        }
+      }
+
+      const { data: createdUser } = await axios.post("/v1/users", {
+        user: {
+          email: firebaseUser.email,
+          uid: firebaseUser.uid,
+          name: defaultName || "ゲスト"
+        }
+      });
+      this.$store.commit("setUser", {
+        user: createdUser,
+        todos: []
+      });
+    },
     login() {
       firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
-        .then(() => {
+        .then(async credential => {
+          await this.ensureUserDocument(credential.user);
           this.$store.commit("setLoading", true);
           this.$store.commit("setNotice", {
             status: true,
@@ -332,7 +358,8 @@ export default {
       firebase
         .auth()
         .signInWithEmailAndPassword("test@gmail.com", "aaaaaa")
-        .then(() => {
+        .then(async credential => {
+          await this.ensureUserDocument(credential.user, "ゲスト");
           this.$store.commit("setNotice", {
             status: true,
             message: "ログインしました"
