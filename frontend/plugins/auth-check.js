@@ -17,6 +17,21 @@ const authCheck = ({ store }) => {
     } catch (error) {
       if (!error.response || error.response.status !== 404) {
         console.log(error)
+codex/fix-user.vue-not-displaying-for-guest-login-4usifo
+        const currentUser = store.state.currentUser
+        if (currentUser && currentUser.user) {
+          return
+        }
+
+        store.commit("setUser", {
+          user: {
+            email: user.email,
+            name: user.displayName || "ゲスト",
+            uid: user.uid
+          },
+          todos: [],
+          rewards: []
+        })
         store.commit("setUser", null)
         return
       }
@@ -37,6 +52,11 @@ const authCheck = ({ store }) => {
       })
     } catch (error) {
       console.log(error)
+codex/fix-user.vue-not-displaying-for-guest-login-4usifo
+      const currentUser = store.state.currentUser
+      if (!currentUser || !currentUser.user) {
+        store.commit("setUser", null)
+      }
       store.commit("setUser", null)
     }
   })

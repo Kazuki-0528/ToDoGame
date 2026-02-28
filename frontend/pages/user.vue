@@ -36,18 +36,25 @@ export default {
       show1: false,
       show2: false,
       error: "",
-      showContent: false
+      showContent: false,
+      unwatchCurrentUser: null
     };
   },
-  fetch({ store, redirect }) {
-    store.watch(
+  created() {
+    this.unwatchCurrentUser = this.$store.watch(
       state => state.currentUser,
-      (newUser, oldUser) => {
+      newUser => {
         if (!newUser) {
-          return redirect("/login");
+          this.$router.replace("/login");
         }
-      }
+      },
+      { immediate: true }
     );
+  },
+  beforeDestroy() {
+    if (this.unwatchCurrentUser) {
+      this.unwatchCurrentUser();
+    }
   },
   components: {
     AddTodo,
