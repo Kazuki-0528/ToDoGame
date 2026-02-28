@@ -40,19 +40,23 @@ export default {
     return {
       items: numberRange,
       title: "",
-      point: ""
+      point: 1
     };
   },
   methods: {
     handleSubmit() {
+      if (!this.title || !this.title.trim()) {
+        this.$store.commit("setError", ["やるべきことを入力してください"]);
+        return;
+      }
+
       const todo = {
-        title: this.title,
+        title: this.title.trim(),
         user_id: this.$store.state.currentUser.user.id,
-        point: this.point
+        point: Number(this.point)
       };
       this.$emit("submit", todo);
       this.title = "";
-      this.point = "";
     }
   }
 };
